@@ -25,12 +25,12 @@ Data modeling:
 Features
 -------------------
 #####Scraping
-- [X] 
-- [X] 
+- [X] placeholder
+- [X] placeholder
 
 #####Data Modeling
-- [X] 
-- [X] 
+- [X] placeholder
+- [X] placeholder
 
 
 Forking?
