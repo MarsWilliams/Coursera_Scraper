@@ -1,57 +1,118 @@
 from splinter import Browser
 from bs4 import BeautifulSoup
-import json
-import string
+from selenium.common.exceptions import ElementNotVisibleException
 
 
 
 
 
 
-def parse_soup(soup):
+def format_course(course):
+    formatted_course = ''
+
+    try:
+        formatted_course = formatted_course + course['organization'] + '\t'
+    except TypeError:
+        formatted_course = formatted_course + 'None' + '\t'
+
+    try:
+        formatted_course = formatted_course + course['title'] + '\t'
+    except TypeError:
+        formatted_course = formatted_course + 'None' + '\t'
+
+    try:
+        formatted_course = formatted_course + ' '.join(course['authors']) + '\t'
+    except TypeError:
+        formatted_course = formatted_course + 'None' + '\t'
+
+    try:
+        formatted_course = formatted_course + course['start_date'] + '\t'
+    except TypeError:
+        formatted_course = formatted_course + 'None' + '\t'
+
+    try:
+        formatted_course = formatted_course + course['duration'] + '\t'
+    except TypeError:
+        formatted_course = formatted_course + 'None' + '\t'
+
+    try:
+        formatted_course = formatted_course + course['schedule_notes']
+    except TypeError:
+        formatted_course = formatted_course + 'None'
+    
+    formatted_course = formatted_course + '\n'
+
+    return formatted_course
+
+
+
+
+
+
+def write_courses_document(courses):
+    document = open("/Users/marswilliams/coursera/courses.txt", "w")
+    for course in courses:
+        formatted_course = format_course(courses[course])
+        document.write(formatted_course)
+    document.close()
+
+
+
+
+
+
+def parse_html(soup):
     """Parses the soup object by finding elements and extracting inner element text"""
 
     # create array to store courses
-    courses = []
+    courses = {}
     # identify all course information elements
     course_blocks = soup.findAll('div', {'class': 'c-courseList-entry'})
 
     # iterrate through courses to parse course details
     for course in course_blocks:
 
-        # initialize a course object
+        course_id = course['data-course']
+
         course_details = {}
-        
+
         authors = []
 
-        course_details['organization'] = str(course.find('div', {'class': 'c-courseList-entry-university'}).find('a').text)
-        course_details['title'] = str(course.find('div', {'class': 'c-courseList-entry-title'}).find('a').text)
-        author_list = course.find('div', {'class': 'c-courseList-entry-instructor'}).findAll('a')
-
-        # iterrate through authors to store individual names in the author array
-        for author in author_list:
-            name = str(author.text)
-            authors.append(name)
-
-        course_details['authors'] = authors
-
-        # parse irregular formatting of schedule information; necessary to store as string because selection of text element removes '<br/>' tag
-        schedule_information = str(soup.find('div', {'class': 'bt3-col-xs-3 bt3-text-right'}).find('p')).replace('<p>','').replace('</p>', '')
+        course_details['organization'] = course.find('div', {'class': 'c-courseList-entry-university'}).find('a').text
+        course_details['title'] = course.find('div', {'class': 'c-courseList-entry-title'}).find('a').text
         
+        try:
+            author_list = course.find('div', {'class': 'c-courseList-entry-instructor'}).findAll('a')
+
+            # iterrate through authors to store individual names in the author array
+            for author in author_list:
+                name = author.text
+                authors.append(name)
+
+            course_details['authors'] = authors
+
+        except AttributeError:
+            course_details['authors'] = None
+
+        schedule_p = str(course.find('div', {'class': 'bt3-col-xs-3 bt3-text-right'}).find('p'))
+
+        schedule_information = schedule_p.replace('<p>', '').replace('<p class="c-courseList-entry-tagline">', '').replace('<p class="c-courseList-entry-noOpenSessions">', '').replace('</p>', '')
+
         # differentiate between courses with a defined start and end date and those with indeterminate or passed schedules
         if '<br/>' in schedule_information:
             schedule_pieces = schedule_information.split('<br/>')
             course_details['start_date'] = schedule_pieces[0]
             course_details['duration'] = schedule_pieces[1]
-            course_details['notes'] = None
+            course_details['schedule_notes'] = None
         else:
             course_details['start_date'] = None
             course_details['duration'] = None
-            course_details['notes'] = schedule_information
+            course_details['schedule_notes'] = schedule_information
+
 
         # append each course object with detail attributes to the courses array
-        courses.append(course_details)
-
+        courses[course_id] = course_details   
+    print (len(courses.keys()))
     return courses
 
 
@@ -76,12 +137,31 @@ def get_html():
         # Visit URL
         url = "https://www.coursera.org/courses?languages=en"
         browser.visit(url)
-        # # Find and click the 'load_more' button
-        content = browser.find_link_by_partial_href('#')
-        #trick browser into waiting
-        browser.is_element_present_by_tag('a', wait_time=6)
-        # Interact with elements
-        return (browser.html)
+
+        complete_course_list_html = []
+
+        more_content = True
+
+        # while more_content:
+        while more_content:
+            # looks for load more text
+            load_more = browser.is_text_present("Load more courses...", wait_time=6)
+
+            html = str(browser.html)
+
+            # add to byte array
+            complete_course_list_html.append(html)
+
+            try:
+                # looks for load more link
+                load_more_link = browser.find_link_by_href('#')
+                load_more_link.click()
+                continue
+            except ElementNotVisibleException:
+                more_content = False
+            
+        courses_str_html = ''.join(complete_course_list_html)
+        return courses_str_html
 
 
 
@@ -91,8 +171,8 @@ def get_html():
 def main():
     course_list = get_html()
     soup = make_soup(course_list)
-    courses = parse_soup(soup)
-
+    courses = parse_html(soup)
+    course_list_document = write_courses_document(courses)
 
 
 
