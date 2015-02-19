@@ -29,7 +29,7 @@ Features
 - [X] Content stored in PostgreSQL
 
 
-Forking?
+To Do
 -----------------------
 Clone my repository and navigate to the project folder.
 
