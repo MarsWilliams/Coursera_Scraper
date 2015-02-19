@@ -8,8 +8,9 @@ from selenium.common.exceptions import ElementNotVisibleException
 
 
 def format_course(course):
+
     formatted_course = ''
-    print (type(course['authors']))
+
     try:
         formatted_course = formatted_course + course['organization'] + '\t'
     except TypeError:
@@ -22,9 +23,7 @@ def format_course(course):
 
     try:
         if len(course['authors']) > 1:
-            print ('hell0', course['authors'])
             authors = '; '.join(course['authors'])
-            print (authors)
             formatted_course = formatted_course + authors + '\t'
         else:
             authors = ''.join(course['authors'])
@@ -57,12 +56,16 @@ def format_course(course):
 
 
 def write_courses_document(courses):
-    document = open("/Users/marswilliams/coursera/courses.txt", "w")
+    
+    document = open("../output/courses.txt", "w")
+    
     for course in courses:
         formatted_course = format_course(courses[course])
         document.write(formatted_course)
+    
     document.close()
 
+    return
 
 
 
@@ -157,6 +160,7 @@ def get_html():
                 load_more_link = browser.find_link_by_href('#')
                 load_more_link.click()
                 continue
+
             except ElementNotVisibleException:
                 html = str(browser.html)
                 more_content = False

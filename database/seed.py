@@ -5,7 +5,7 @@ import datetime
 def load_courses(session):
     # use u.user
     #reads in file and parses data
-    users_table = open("courses.txt", "r")
+    users_table = open("../output/courses.txt", "r")
     for line in users_table:
         aline = line.split('\t')
         organization, title, authors, start_date, duration, schedule_notes = aline

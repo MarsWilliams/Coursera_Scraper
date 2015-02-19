@@ -83,6 +83,12 @@ Play with the data!
 
 I'm happy to answer any questions you may have or help with installation.
 
+
+Forking?
+-----------------------
+- [X] Create separate schema for authors
+- [X] Write unit tests
+
 ![lovely](https://cloud.githubusercontent.com/assets/6811339/5433884/6ed29e24-8400-11e4-906d-cb4bec19b8e4.png)
 
 
