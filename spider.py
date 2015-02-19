@@ -21,7 +21,10 @@ def format_course(course):
         formatted_course = formatted_course + 'None' + '\t'
 
     try:
-        formatted_course = formatted_course + ' '.join(course['authors']) + '\t'
+        if len(course['authors']) > 1:
+            formatted_course = formatted_course + ' '.join(course['authors']) + '\t'
+        else:
+            formatted_course = formatted_course + ''.join(course['authors']) + '\t'
     except TypeError:
         formatted_course = formatted_course + 'None' + '\t'
 
@@ -112,7 +115,7 @@ def parse_html(soup):
 
         # append each course object with detail attributes to the courses array
         courses[course_id] = course_details   
-    print (len(courses.keys()))
+
     return courses
 
 

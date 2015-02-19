@@ -18,6 +18,4 @@ DATABASE = {
 	'database': 'courses'
 }
 
-ITEM_PIPELINES = {'coursera_scrape.pipelines.CourseraPipeline': 1}
-
 USER_AGENT = 'coursera_scrape (+http://cargocollective.com/metaphor_formation)'

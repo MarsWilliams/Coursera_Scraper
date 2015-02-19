@@ -1,0 +1,3 @@
+SQLAlchemy==0.7.9
+beautifulsoup4
+splinter==0.7.0
