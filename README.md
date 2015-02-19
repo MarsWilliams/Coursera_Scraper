@@ -29,7 +29,7 @@ Features
 - [X] Content stored in PostgreSQL
 
 
-To Do
+Forking?
 -----------------------
 Clone my repository and navigate to the project folder.
 
@@ -84,7 +84,7 @@ Play with the data!
 I'm happy to answer any questions you may have or help with installation.
 
 
-Forking?
+To Do
 -----------------------
 - [X] Create separate schema for authors
 - [X] Write unit tests
