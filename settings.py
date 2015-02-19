@@ -15,7 +15,7 @@ DATABASE = {
 	'port': '5432',
 	'username': 'marswilliams',
 	'password': 'Weareallg0ds!',
-	'database': 'courses'
+	'database': 'coursera'
 }
 
 USER_AGENT = 'coursera_scrape (+http://cargocollective.com/metaphor_formation)'

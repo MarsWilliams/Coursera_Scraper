@@ -4,7 +4,7 @@ EduScrapte is a simple scraper program that mimics a browser with Splinter to sc
 
 ###Contents
 <ul>
-	<li><a href="#technologies-and-stack">Technologies & Stack</a></li>
+	<li><a href="#technologies-and-stack">Technologies and Stack</a></li>
 	<li><a href="#features">Features</a></li>
 	<li><a href="#forking">Forking</a></li>
 </ul>
@@ -12,25 +12,21 @@ EduScrapte is a simple scraper program that mimics a browser with Splinter to sc
 
 Technologies and Stack
 ------------------------
-<h4>Backend:</h4>
-Python<br>
-Python libraries: BeautifulSoup, Splinter<br>
-PostgreSQL<br>
-SQLAlchemy<br>
-Data scraping: 
-Data cleaning, sorting: 
-Data modeling: 
+Language: Python<br>
+Data scraping: BeautifulSoup, Splinter <br>
+Data modeling: SQLAlchemy <br>
+Database: PostgreSQL
 
 
 Features
 -------------------
 #####Scraping
-- [X] placeholder
-- [X] placeholder
+- [X] Uses splinter to mimic browser behavior
+- [X] Waits for content to laod before scraping
 
 #####Data Modeling
-- [X] placeholder
-- [X] placeholder
+- [X] Defines schema with SQLAlchemy
+- [X] Content stored in PostgreSQL
 
 
 Forking?
@@ -58,21 +54,31 @@ Launch PostgreSQL.
 	open the app (you should see an elephant symbol in your task bar)
 
 
-Create the database.
+Create the database and table.
 
 	`$ psql -h localhost -d postgres`
-	`$ postgres=# create database courses`
+	`$ postgres=# create database coursera`
+	`$ postgres=# \connect coursera`
+	`$ coursera=# CREATE TABLE course_details (id serial primary key not null, organization text, title text, authors text, start_date date, end_date date, duration text, schedule_notes text);`
+	`$ coursera=# INSERT INTO course_details (organization, title, authors, start_date, end_date, duration, schedule_notes) VALUES ('Dummy Entry', None, None, now(), now(), None, None);`
 
 
 Run the spider.
 
 	`$ python spider.py`
 
+Seed the database.
+
+	`$ python seed.py`
+
+Erase dummy data.
+
+	`$ DELETE FROM course_details where organization='Dummy Entry'`	
 
 Play with the data!
 
 	`$ psql -h localhost -d postgres`
-	`$ postgres=# select * from courses limit 5`
+	`$ postgres=# SELECT * FROM course_details WHERE title LIKE '%Game%'`
 
 
 I'm happy to answer any questions you may have or help with installation.

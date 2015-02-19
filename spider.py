@@ -9,7 +9,7 @@ from selenium.common.exceptions import ElementNotVisibleException
 
 def format_course(course):
     formatted_course = ''
-
+    print (type(course['authors']))
     try:
         formatted_course = formatted_course + course['organization'] + '\t'
     except TypeError:
@@ -22,9 +22,13 @@ def format_course(course):
 
     try:
         if len(course['authors']) > 1:
-            formatted_course = formatted_course + ' '.join(course['authors']) + '\t'
+            print ('hell0', course['authors'])
+            authors = '; '.join(course['authors'])
+            print (authors)
+            formatted_course = formatted_course + authors + '\t'
         else:
-            formatted_course = formatted_course + ''.join(course['authors']) + '\t'
+            authors = ''.join(course['authors'])
+            formatted_course = formatted_course + authors + '\t'
     except TypeError:
         formatted_course = formatted_course + 'None' + '\t'
 
@@ -141,8 +145,6 @@ def get_html():
         url = "https://www.coursera.org/courses?languages=en"
         browser.visit(url)
 
-        complete_course_list_html = []
-
         more_content = True
 
         # while more_content:
@@ -150,21 +152,16 @@ def get_html():
             # looks for load more text
             load_more = browser.is_text_present("Load more courses...", wait_time=6)
 
-            html = str(browser.html)
-
-            # add to byte array
-            complete_course_list_html.append(html)
-
             try:
                 # looks for load more link
                 load_more_link = browser.find_link_by_href('#')
                 load_more_link.click()
                 continue
             except ElementNotVisibleException:
+                html = str(browser.html)
                 more_content = False
             
-        courses_str_html = ''.join(complete_course_list_html)
-        return courses_str_html
+                return html
 
 
 
