@@ -57,7 +57,7 @@ def format_course(course):
 
 def write_courses_document(courses):
     
-    document = open("../output/courses.txt", "w")
+    document = open("../output/courses.tsv", "w")
     
     for course in courses:
         formatted_course = format_course(courses[course])
